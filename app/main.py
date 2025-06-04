@@ -45,11 +45,7 @@ async def vectorize(
         return Response(
             content=svg,
             media_type="image/svg+xml",
-            headers={
-                "Content-Disposition": (
-                    "attachment; filename=vectorized.svg"
-                )
-            },
+            headers={"Content-Disposition": ("attachment; filename=vectorized.svg")},
         )
     return JSONResponse({"svg": svg})
 
