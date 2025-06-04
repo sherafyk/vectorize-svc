@@ -9,10 +9,14 @@ from .core.tracing import apply_fill, raster_to_svg
 
 app = FastAPI(title="vectorize-svc")
 
+# cache API token so we don't hit the environment on every request
+API_TOKEN = os.getenv("API_TOKEN")
+
 
 def _check_auth(request: Request) -> None:
-    token = os.getenv("API_TOKEN")
-    if token and request.headers.get("Authorization") != f"Bearer {token}":
+    """Validate Authorization header against the API token if configured."""
+    header = request.headers.get("Authorization")
+    if API_TOKEN and header != f"Bearer {API_TOKEN}":
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
@@ -31,14 +35,21 @@ async def vectorize(
     content = await image.read()
     if len(content) > 10 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="File too large")
-    svg = raster_to_svg(content, threshold, turnpolicy, alphamax, turdsize)
+    try:
+        svg = raster_to_svg(content, threshold, turnpolicy, alphamax, turdsize)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     if fill:
         svg = apply_fill(svg, fill)
     if download:
         return Response(
             content=svg,
             media_type="image/svg+xml",
-            headers={"Content-Disposition": "attachment; filename=vectorized.svg"},
+            headers={
+                "Content-Disposition": (
+                    "attachment; filename=vectorized.svg"
+                )
+            },
         )
     return JSONResponse({"svg": svg})
 
