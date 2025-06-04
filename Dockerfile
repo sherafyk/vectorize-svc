@@ -1,6 +1,6 @@
 FROM python:3.12-slim AS builder
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential libagg-dev potrace libpotrace-dev && rm -rf /var/lib/apt/lists/*
+    build-essential libagg-dev potrace libpotrace-dev pkg-config && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --prefix=/install -r requirements.txt
