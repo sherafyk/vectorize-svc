@@ -13,6 +13,9 @@ docker-compose up --build
 # inline SVG
 curl -F image=@test.png http://localhost:8080/vectorize
 
+# from URL
+curl -X POST "http://localhost:8080/vectorize?image_url=https://example.com/img.png"
+
 # download
 curl -F image=@test.png "http://localhost:8080/vectorize?download=true" -o out.svg
 ```
