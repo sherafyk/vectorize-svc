@@ -16,9 +16,9 @@ jobs:
       - run: ruff check --fix .
       - run: black --check .
       - run: pytest --maxfail=1 --disable-warnings
-      - run: |
-          echo $CR_PAT | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        env:
-          CR_PAT: ${{ secrets.GITHUB_TOKEN }}
-      - run: docker build -t ghcr.io/${{ github.repository }}/vectorize-svc:${{ github.sha }} .
-      - run: docker push ghcr.io/${{ github.repository }}/vectorize-svc:${{ github.sha }}
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository }}/vectorize-svc:${{ github.sha }} .
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository }}/vectorize-svc:${{ github.sha }}
