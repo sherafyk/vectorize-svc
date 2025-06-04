@@ -4,6 +4,8 @@ import os
 
 from fastapi import FastAPI, File, UploadFile, Query, HTTPException, Request
 from fastapi.responses import JSONResponse, Response
+import asyncio
+import urllib.request
 
 from .core.tracing import apply_fill, raster_to_svg
 
@@ -20,10 +22,11 @@ def _check_auth(request: Request) -> None:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
-@app.post("/vectorize")
+@app.post("/vectorize", response_model=None)
 async def vectorize(
     request: Request,
-    image: UploadFile = File(...),
+    image: UploadFile | None = File(None),
+    image_url: str | None = Query(None),
     threshold: int = Query(128, ge=0, le=255),
     turnpolicy: str = Query("minority"),
     alphamax: float = Query(1.0),
@@ -32,7 +35,24 @@ async def vectorize(
     download: bool = Query(False),
 ) -> Response | JSONResponse:
     _check_auth(request)
-    content = await image.read()
+    if image_url:
+        if not image_url.lower().startswith(("http://", "https://")):
+            raise HTTPException(status_code=400, detail="Invalid image_url")
+
+        def _download(url: str) -> bytes:
+            with urllib.request.urlopen(url, timeout=10) as resp:
+                return resp.read()
+
+        try:
+            content = await asyncio.to_thread(_download, image_url)
+        except Exception as exc:  # pragma: no cover - network errors
+            raise HTTPException(
+                status_code=400, detail="Failed to fetch image"
+            ) from exc
+    else:
+        if image is None:
+            raise HTTPException(status_code=400, detail="No image provided")
+        content = await image.read()
     if len(content) > 10 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="File too large")
     try:
