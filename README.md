@@ -44,3 +44,5 @@ Then install Python dependencies and run the tests:
 pip install -r requirements.txt
 pytest
 ```
+The `requirements.txt` file now lists `httpx`, required by the
+`fastapi.testclient` used in the tests.
