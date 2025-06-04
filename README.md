@@ -26,3 +26,18 @@ curl -F image=@test.png "http://localhost:8080/vectorize?download=true" -o out.s
 1. `docker build -t vectorize-svc .`
 2. `docker run -d -p 8080:8080 --env API_TOKEN=secret vectorize-svc`
 3. Point your reverse proxy to port 8080
+
+### Development setup
+
+Install system dependencies required to build `pypotrace`:
+
+```bash
+apt-get install -y pkg-config libagg-dev libpotrace-dev
+```
+
+Then install Python dependencies and run the tests:
+
+```bash
+pip install -r requirements.txt
+pytest
+```
