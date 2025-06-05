@@ -39,4 +39,3 @@ def test_vectorize_image_url_get() -> None:
         resp = client.get("/vectorize?image_url=http://example.com/img.png")
     assert resp.status_code == 200
     assert "<svg" in resp.json()["svg"]
-
