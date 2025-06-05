@@ -31,3 +31,12 @@ def test_vectorize_image_url() -> None:
         resp = client.post("/vectorize?image_url=http://example.com/img.png")
     assert resp.status_code == 200
     assert "<svg" in resp.json()["svg"]
+
+
+def test_vectorize_image_url_get() -> None:
+    client = TestClient(app)
+    with patch("urllib.request.urlopen", return_value=_Resp()):
+        resp = client.get("/vectorize?image_url=http://example.com/img.png")
+    assert resp.status_code == 200
+    assert "<svg" in resp.json()["svg"]
+
