@@ -70,6 +70,31 @@ async def vectorize(
     return JSONResponse({"svg": svg})
 
 
+@app.get("/vectorize", response_model=None)
+async def vectorize_get(
+    request: Request,
+    image_url: str = Query(...),
+    threshold: int = Query(128, ge=0, le=255),
+    turnpolicy: str = Query("minority"),
+    alphamax: float = Query(1.0),
+    turdsize: int = Query(2),
+    fill: str | None = Query(None),
+    download: bool = Query(False),
+) -> Response | JSONResponse:
+    """Vectorize an image from a URL via a GET request."""
+    return await vectorize(
+        request=request,
+        image=None,
+        image_url=image_url,
+        threshold=threshold,
+        turnpolicy=turnpolicy,
+        alphamax=alphamax,
+        turdsize=turdsize,
+        fill=fill,
+        download=download,
+    )
+
+
 @app.get("/healthz")
 def healthz() -> dict[str, str]:
     return {"status": "ok"}

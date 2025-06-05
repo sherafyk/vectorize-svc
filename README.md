@@ -33,6 +33,13 @@ Responses:
 - `400` on invalid input or download errors
 - `401` if authorization fails
 
+### `GET /vectorize`
+
+Vectorize an image by specifying its `image_url` in the query string. This makes
+it possible to call the service directly from a web browser. The same query
+parameters as the POST endpoint are supported and the response format is
+identical.
+
 ### `GET /healthz`
 
 Simple liveness probe returning `{"status": "ok"}`.
@@ -45,6 +52,9 @@ curl -F image=@test.png http://localhost:8080/vectorize
 
 # via URL
 curl -X POST "http://localhost:8080/vectorize?image_url=https://example.com/img.png"
+
+# GET request (paste in browser)
+http://localhost:8080/vectorize?image_url=https://example.com/img.png
 
 # download result
 curl -F image=@test.png "http://localhost:8080/vectorize?download=true" -o out.svg
