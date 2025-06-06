@@ -39,3 +39,24 @@ def test_vectorize_image_url_get() -> None:
         resp = client.get("/vectorize?image_url=http://example.com/img.png")
     assert resp.status_code == 200
     assert "<svg" in resp.json()["svg"]
+
+
+def test_auth_header() -> None:
+    with patch("app.main.API_TOKEN", "secret"):
+        client = TestClient(app)
+        resp = client.post(
+            "/vectorize",
+            headers={"Authorization": "Bearer secret"},
+            files={"image": ("img.png", _img_bytes(), "image/png")},
+        )
+        assert resp.status_code == 200
+
+
+def test_auth_query_param() -> None:
+    with patch("app.main.API_TOKEN", "secret"):
+        client = TestClient(app)
+        resp = client.post(
+            "/vectorize?token=secret",
+            files={"image": ("img.png", _img_bytes(), "image/png")},
+        )
+        assert resp.status_code == 200

@@ -15,7 +15,7 @@ This will launch the app on [http://localhost:8080](http://localhost:8080).
 
 ### `POST /vectorize`
 
-Convert an image to SVG. The image can be uploaded as multipart form data (`image` field) or specified via `image_url` query parameter. If `API_TOKEN` is set, include an `Authorization: Bearer <token>` header.
+Convert an image to SVG. The image can be uploaded as multipart form data (`image` field) or specified via `image_url` query parameter. If `API_TOKEN` is set, include an `Authorization: Bearer <token>` header or pass `token=<token>` in the query string.
 
 **Query parameters**
 
@@ -38,7 +38,8 @@ Responses:
 Vectorize an image by specifying its `image_url` in the query string. This makes
 it possible to call the service directly from a web browser. The same query
 parameters as the POST endpoint are supported and the response format is
-identical.
+identical. If an `API_TOKEN` is configured, include `token=<token>` in the query
+string (or send the `Authorization` header) when calling this endpoint.
 
 ### `GET /healthz`
 
@@ -53,8 +54,14 @@ curl -F image=@test.png http://localhost:8080/vectorize
 # via URL
 curl -X POST "http://localhost:8080/vectorize?image_url=https://example.com/img.png"
 
+# with Authorization header
+curl -H "Authorization: Bearer secret" -F image=@test.png http://localhost:8080/vectorize
+
 # GET request (paste in browser)
 http://localhost:8080/vectorize?image_url=https://example.com/img.png
+
+# GET request with token
+http://localhost:8080/vectorize?image_url=https://example.com/img.png&token=secret
 
 # download result
 curl -F image=@test.png "http://localhost:8080/vectorize?download=true" -o out.svg
@@ -62,7 +69,7 @@ curl -F image=@test.png "http://localhost:8080/vectorize?download=true" -o out.s
 
 ## Environment variables
 
-- `API_TOKEN` (optional) – Bearer token required for calls to `/vectorize` when set.
+- `API_TOKEN` (optional) – Bearer token required for calls to `/vectorize` when set. Supply it via the `Authorization` header or a `token` query parameter.
 
 ## Deployment
 
