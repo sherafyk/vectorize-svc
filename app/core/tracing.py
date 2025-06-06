@@ -16,6 +16,14 @@ import numpy as np
 from PIL import Image
 import potrace
 
+
+def _fmt(num: float) -> str:
+    """Format numeric values for the SVG output."""
+    rounded = round(num)
+    if abs(num - rounded) < 1e-6:
+        return str(int(rounded))
+    return f"{round(num, 1):.1f}".rstrip("0").rstrip(".")
+
 TURNPOLICIES: dict[str, int] = {
     "black": potrace.TURNPOLICY_BLACK,
     "white": potrace.TURNPOLICY_WHITE,
@@ -57,17 +65,21 @@ def raster_to_svg(
     path_cmds = []
     for curve in path:
         sx, sy = curve.start_point
-        cmd = f"M {sx} {sy}"
+        cmd = f"M {_fmt(sx)} {_fmt(sy)}"
         for seg in curve:
             if seg.is_corner:
                 cx, cy = seg.c
                 ex, ey = seg.end_point
-                cmd += f" L {cx} {cy} L {ex} {ey}"
+                cmd += (
+                    f" L {_fmt(cx)} {_fmt(cy)} L {_fmt(ex)} {_fmt(ey)}"
+                )
             else:
                 c1x, c1y = seg.c1
                 c2x, c2y = seg.c2
                 ex, ey = seg.end_point
-                cmd += f" C {c1x} {c1y} {c2x} {c2y} {ex} {ey}"
+                cmd += (
+                    f" C {_fmt(c1x)} {_fmt(c1y)} {_fmt(c2x)} {_fmt(c2y)} {_fmt(ex)} {_fmt(ey)}"
+                )
         cmd += " Z"
         path_cmds.append(cmd)
     d = " ".join(path_cmds)
@@ -84,7 +96,11 @@ def raster_to_svg(
     scale = min(size / width, size / height)
     tx = (size - width * scale) / 2
     ty = (size - height * scale) / 2
-    inner = ET.SubElement(outer, "g", transform=f"translate({tx} {ty}) scale({scale})")
+    inner = ET.SubElement(
+        outer,
+        "g",
+        transform=f"translate({_fmt(tx)} {_fmt(ty)}) scale({_fmt(scale)})",
+    )
     ET.SubElement(inner, "path", d=d)
     return ET.tostring(svg_el, encoding="unicode")
 

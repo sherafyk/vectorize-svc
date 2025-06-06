@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import io
+import re
+from xml.etree import ElementTree as ET
 
 import pytest
 from PIL import Image
@@ -48,3 +50,17 @@ def test_threshold_effect() -> None:
 def test_custom_size() -> None:
     svg = raster_to_svg(_sample_image(), size=100)
     assert 'width="100"' in svg and 'height="100"' in svg
+
+
+def test_numeric_rounding() -> None:
+    """Ensure numeric values are rounded to at most one decimal place."""
+    svg = raster_to_svg(_sample_image())
+    tree = ET.fromstring(svg)
+    ns = {"svg": "http://www.w3.org/2000/svg"}
+    path_d = tree.find(".//svg:path", ns).attrib.get("d", "")
+    numbers = re.findall(r"-?\d+(?:\.\d+)?", path_d)
+    transform = tree.find('.//svg:g[@transform]', ns).attrib.get('transform', '')
+    numbers += re.findall(r"-?\d+(?:\.\d+)?", transform)
+    for num in numbers:
+        if '.' in num:
+            assert len(num.split('.')[1]) <= 1
