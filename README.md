@@ -17,6 +17,7 @@ docker-compose up --build
 > 
 > ```
 > docker-compose down
+> docker-compose up -d --build
 > ```
 > > `down` stops and removes the old containers.  
 > > `up -d --build` rebuilds the image with the new code, starts the containers in the background.
