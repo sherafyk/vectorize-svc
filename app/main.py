@@ -19,9 +19,7 @@ def _check_auth(request: Request) -> None:
     """Validate auth token from header or query string if configured."""
     header = request.headers.get("Authorization")
     token_param = request.query_params.get("token")
-    if API_TOKEN and not (
-        header == f"Bearer {API_TOKEN}" or token_param == API_TOKEN
-    ):
+    if API_TOKEN and not (header == f"Bearer {API_TOKEN}" or token_param == API_TOKEN):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 
