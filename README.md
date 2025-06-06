@@ -8,6 +8,33 @@ FastAPI micro-service for converting raster images to SVG paths using [potrace](
 # build the container and start the service
 docker-compose up --build
 ```
+> [!TIP]
+> ### Useful Snippets
+> ```
+> git pull origin main
+> ```
+> > Pull the latest changes
+> 
+> ```
+> docker-compose down
+> ```
+> > `down` stops and removes the old containers.  
+> > `up -d --build` rebuilds the image with the new code, starts the containers in the background.
+> 
+> ```
+> docker-compose ps
+> ```
+> > Check if it’s running: Look for “Up” in the STATUS column.
+>
+> ```
+> docker-compose logs -f
+> ```
+> > Check logs  
+> 
+> ```
+> curl http://localhost:18080/healthz
+> ```
+> > Test endpoint  
 
 This will launch the app on [http://localhost:8080](http://localhost:8080).
 The `docker-compose.yml` file sets a default `API_TOKEN` of `changeme`. Edit
