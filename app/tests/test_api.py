@@ -60,3 +60,14 @@ def test_auth_query_param() -> None:
             files={"image": ("img.png", _img_bytes(), "image/png")},
         )
         assert resp.status_code == 200
+
+
+def test_auth_query_param_get() -> None:
+    """Ensure token works when using GET /vectorize."""
+    with patch("app.main.API_TOKEN", "secret"):
+        client = TestClient(app)
+        with patch("urllib.request.urlopen", return_value=_Resp()):
+            resp = client.get(
+                "/vectorize?image_url=http://example.com/img.png&token=secret"
+            )
+        assert resp.status_code == 200
