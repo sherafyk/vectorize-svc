@@ -1,6 +1,6 @@
 # vectorize-svc
 
-FastAPI micro-service for converting raster images to SVG paths using [potrace](http://potrace.sourceforge.net/). It exposes a single HTTP endpoint that accepts an image file or URL and returns the traced SVG data.
+FastAPI micro-service for converting raster images to SVG paths using [potrace](http://potrace.sourceforge.net/). It exposes a single HTTP endpoint that accepts an image file or URL and returns the traced SVG data. Any format supported by Pillow (PNG, JPEG, WebP, etc.) can be used as input.
 
 ## Quick start with Docker
 
@@ -49,6 +49,7 @@ Remove the variable entirely if you want to run the service without auth.
 ### `POST /vectorize`
 
 Convert an image to SVG. The image can be uploaded as multipart form data (`image` field) or specified via `image_url` query parameter. If `API_TOKEN` is set, include an `Authorization: Bearer <token>` header or pass `token=<token>` in the query string.
+Supported input types include PNG, JPEG, WebP, and any other format that Pillow can decode.
 
 **Query parameters**
 
