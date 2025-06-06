@@ -43,7 +43,9 @@ def test_vectorize_image_url(fmt: str, ext: str) -> None:
     with patch("urllib.request.urlopen", return_value=_Resp(fmt)):
         resp = client.post(f"/vectorize?image_url=http://example.com/img.{ext}")
     assert resp.status_code == 200
-    assert "<svg" in resp.json()["svg"]
+    body = resp.json()["svg"]
+    assert body.startswith("<svg") and body.endswith("</svg>")
+    assert "\\" not in body
 
 
 def test_vectorize_custom_size() -> None:
@@ -68,7 +70,9 @@ def test_vectorize_image_url_get(fmt: str, ext: str) -> None:
     with patch("urllib.request.urlopen", return_value=_Resp(fmt)):
         resp = client.get(f"/vectorize?image_url=http://example.com/img.{ext}")
     assert resp.status_code == 200
-    assert "<svg" in resp.json()["svg"]
+    body = resp.json()["svg"]
+    assert body.startswith("<svg") and body.endswith("</svg>")
+    assert "\\" not in body
 
 
 @pytest.mark.parametrize(
