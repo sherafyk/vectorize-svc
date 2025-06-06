@@ -68,6 +68,11 @@ Responses:
 - `400` on invalid input or download errors
 - `401` if authorization fails
 
+When calling the API programmatically, make sure to parse the JSON body and
+extract the `svg` field. Printing the raw HTTP response will show escaped
+characters (like backslashes) around the SVG data, but parsing the JSON will
+yield the clean `<svg...></svg>` string.
+
 ### `GET /vectorize`
 
 Vectorize an image by specifying its `image_url` in the query string. This makes
