@@ -53,15 +53,17 @@ Supported input types include PNG, JPEG, WebP, and any other format that Pillow 
 
 **Query parameters**
 
-| name | type | default | description |
-| --- | --- | --- | --- |
-| `threshold` | int | `128` | Binarization threshold (0–255) |
-| `turnpolicy` | str | `minority` | Potrace turn policy |
-| `alphamax` | float | `1.0` | AlphaMax parameter |
-| `turdsize` | int | `2` | Suppress speckles smaller than this |
-| `size` | int | `250` | Output dimension (square pixels) |
-| `fill` | str | `None` | Optional fill color (e.g. `#ff0000`) |
-| `download` | bool | `false` | Return SVG as attachment |
+| name | type | default | options | description |
+| --- | --- | --- | --- | --- |
+| `image_url` | str | `None` | `https://example.com/img.png` | URL of the source image when not uploading a file |
+| `token` | str | – | `secret` | API token if not using the `Authorization` header |
+| `threshold` | int | `128` | `64`, `128`, `200` | Binarization threshold (0–255) |
+| `turnpolicy` | str | `minority` | `black`, `white`, `left`, `right`, `minority`, `majority`, `random` | Potrace turn policy |
+| `alphamax` | float | `1.0` | `0.0`, `1.0`, `2.0` | AlphaMax parameter |
+| `turdsize` | int | `2` | `0`, `2`, `5` | Suppress speckles smaller than this |
+| `size` | int | `250` | `100`, `250`, `500` | Output dimension (square pixels)
+| `fill` | str | `None` | `#ff0000`, `#00ff00` | Optional fill color |
+| `download` | bool | `false` | `true`, `false` | Return SVG as attachment |
 
 Responses:
 - `200` JSON `{"svg": "<svg...>"}` or raw SVG if `download=true`
