@@ -32,6 +32,7 @@ async def vectorize(
     turnpolicy: str = Query("minority"),
     alphamax: float = Query(1.0),
     turdsize: int = Query(2),
+    size: int = Query(250, gt=0),
     fill: str | None = Query(None),
     download: bool = Query(False),
 ) -> Response | JSONResponse:
@@ -57,7 +58,7 @@ async def vectorize(
     if len(content) > 10 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="File too large")
     try:
-        svg = raster_to_svg(content, threshold, turnpolicy, alphamax, turdsize)
+        svg = raster_to_svg(content, threshold, turnpolicy, alphamax, turdsize, size)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     if fill:
@@ -79,6 +80,7 @@ async def vectorize_get(
     turnpolicy: str = Query("minority"),
     alphamax: float = Query(1.0),
     turdsize: int = Query(2),
+    size: int = Query(250, gt=0),
     fill: str | None = Query(None),
     download: bool = Query(False),
 ) -> Response | JSONResponse:
@@ -91,6 +93,7 @@ async def vectorize_get(
         turnpolicy=turnpolicy,
         alphamax=alphamax,
         turdsize=turdsize,
+        size=size,
         fill=fill,
         download=download,
     )

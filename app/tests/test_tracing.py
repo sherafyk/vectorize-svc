@@ -20,6 +20,7 @@ def _sample_image(fmt: str = "PNG") -> bytes:
 def test_svg_generation(fmt: str) -> None:
     svg = raster_to_svg(_sample_image(fmt))
     assert "<svg" in svg and "<path" in svg
+    assert 'width="250"' in svg and 'height="250"' in svg
 
 
 @pytest.mark.parametrize("fmt", ["PNG", "JPEG", "WEBP"])
@@ -42,3 +43,8 @@ def test_threshold_effect() -> None:
     filled = raster_to_svg(buf.getvalue(), threshold=0)
     assert 'd=""' in empty
     assert 'd=""' not in filled
+
+
+def test_custom_size() -> None:
+    svg = raster_to_svg(_sample_image(), size=100)
+    assert 'width="100"' in svg and 'height="100"' in svg
