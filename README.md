@@ -10,6 +10,11 @@ docker-compose up --build
 ```
 
 This will launch the app on [http://localhost:8080](http://localhost:8080).
+The `docker-compose.yml` file sets a default `API_TOKEN` of `changeme`. Edit
+this value if you want to require a different token for authentication. When the
+token is set, all calls to `/vectorize` must include it either via an
+`Authorization: Bearer <token>` header or a `token=<token>` query parameter.
+Remove the variable entirely if you want to run the service without auth.
 
 ## API reference
 
@@ -39,7 +44,12 @@ Vectorize an image by specifying its `image_url` in the query string. This makes
 it possible to call the service directly from a web browser. The same query
 parameters as the POST endpoint are supported and the response format is
 identical. If an `API_TOKEN` is configured, include `token=<token>` in the query
-string (or send the `Authorization` header) when calling this endpoint.
+string (or send the `Authorization` header) when calling this endpoint. This is
+especially handy when pasting the URL directly into a browser:
+
+```
+http://localhost:8080/vectorize?image_url=https://example.com/img.png&token=secret
+```
 
 ### `GET /healthz`
 
@@ -57,10 +67,10 @@ curl -X POST "http://localhost:8080/vectorize?image_url=https://example.com/img.
 # with Authorization header
 curl -H "Authorization: Bearer secret" -F image=@test.png http://localhost:8080/vectorize
 
-# GET request (paste in browser)
+# GET request (no auth)
 http://localhost:8080/vectorize?image_url=https://example.com/img.png
 
-# GET request with token
+# GET request with token (browser)
 http://localhost:8080/vectorize?image_url=https://example.com/img.png&token=secret
 
 # download result
@@ -69,7 +79,11 @@ curl -F image=@test.png "http://localhost:8080/vectorize?download=true" -o out.s
 
 ## Environment variables
 
-- `API_TOKEN` (optional) – Bearer token required for calls to `/vectorize` when set. Supply it via the `Authorization` header or a `token` query parameter.
+- `API_TOKEN` (optional) – Bearer token required for calls to `/vectorize` when set.
+  When you run the service with `API_TOKEN` defined, every request must include
+  the token using one of two methods:
+  1. `Authorization: Bearer <token>` header
+  2. `token=<token>` query parameter
 
 ## Deployment
 
