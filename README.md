@@ -32,23 +32,23 @@ docker-compose up --build
 > ```
 > > Check logs  
 > 
-> ```
-> curl http://localhost:18080/healthz
-> ```
-> > Test endpoint  
+ > ```
+ > curl http://localhost:8080/healthz
+ > ```
+ > > Test endpoint
 
 This will launch the app on [http://localhost:8080](http://localhost:8080).
-The `docker-compose.yml` file sets a default `API_TOKEN` of `changeme`. Edit
-this value if you want to require a different token for authentication. When the
-token is set, all calls to `/vectorize` must include it either via an
-`Authorization: Bearer <token>` header or a `token=<token>` query parameter.
-Remove the variable entirely if you want to run the service without auth.
+`docker-compose.yml` sets a default `API_TOKEN` of `changeme`. You can change
+this value, but authentication is always required. Every call to `/vectorize`
+must include the token using one of the following methods:
+1. `Authorization: Bearer <token>` header
+2. `token=<token>` query parameter
 
 ## API reference
 
 ### `POST /vectorize`
 
-Convert an image to SVG. The image can be uploaded as multipart form data (`image` field) or specified via `image_url` query parameter. If `API_TOKEN` is set, include an `Authorization: Bearer <token>` header or pass `token=<token>` in the query string.
+Convert an image to SVG. The image can be uploaded as multipart form data (`image` field) or specified via `image_url` query parameter. Every request must provide the API token in an `Authorization: Bearer <token>` header or as `token=<token>` in the query string.
 Supported input types include PNG, JPEG, WebP, and any other format that Pillow can decode.
 
 **Query parameters**
@@ -72,9 +72,9 @@ Responses:
 Vectorize an image by specifying its `image_url` in the query string. This makes
 it possible to call the service directly from a web browser. The same query
 parameters as the POST endpoint are supported and the response format is
-identical. If an `API_TOKEN` is configured, include `token=<token>` in the query
-string (or send the `Authorization` header) when calling this endpoint. This is
-especially handy when pasting the URL directly into a browser:
+identical. The authentication token is required; include `token=<token>` in the
+query string or send the `Authorization` header when calling this endpoint. This
+is especially handy when pasting the URL directly into a browser:
 
 ```
 http://localhost:8080/vectorize?image_url=https://example.com/img.png&token=secret
@@ -88,29 +88,29 @@ Simple liveness probe returning `{"status": "ok"}`.
 
 ```bash
 # local file
-curl -F image=@test.png http://localhost:8080/vectorize
+curl -H "Authorization: Bearer secret" -F image=@test.png \
+  http://localhost:8080/vectorize
 
 # via URL
-curl -X POST "http://localhost:8080/vectorize?image_url=https://example.com/img.png"
+curl -X POST \
+  -H "Authorization: Bearer secret" \
+  "http://localhost:8080/vectorize?image_url=https://example.com/img.png"
 
-# with Authorization header
-curl -H "Authorization: Bearer secret" -F image=@test.png http://localhost:8080/vectorize
-
-# GET request (no auth)
-http://localhost:8080/vectorize?image_url=https://example.com/img.png
+# GET request
+http://localhost:8080/vectorize?image_url=https://example.com/img.png&token=secret
 
 # GET request with token (browser)
 http://localhost:8080/vectorize?image_url=https://example.com/img.png&token=secret
 
 # download result
-curl -F image=@test.png "http://localhost:8080/vectorize?download=true" -o out.svg
+curl -H "Authorization: Bearer secret" \
+  -F image=@test.png "http://localhost:8080/vectorize?download=true" -o out.svg
 ```
 
 ## Environment variables
 
-- `API_TOKEN` (optional) – Bearer token required for calls to `/vectorize` when set.
-  When you run the service with `API_TOKEN` defined, every request must include
-  the token using one of two methods:
+- `API_TOKEN` – Bearer token that **must** be supplied with every call to `/vectorize`.
+  Each request must include the token using one of two methods:
   1. `Authorization: Bearer <token>` header
   2. `token=<token>` query parameter
 
