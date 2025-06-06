@@ -59,6 +59,7 @@ Supported input types include PNG, JPEG, WebP, and any other format that Pillow 
 | `turnpolicy` | str | `minority` | Potrace turn policy |
 | `alphamax` | float | `1.0` | AlphaMax parameter |
 | `turdsize` | int | `2` | Suppress speckles smaller than this |
+| `size` | int | `250` | Output dimension (square pixels) |
 | `fill` | str | `None` | Optional fill color (e.g. `#ff0000`) |
 | `download` | bool | `false` | Return SVG as attachment |
 

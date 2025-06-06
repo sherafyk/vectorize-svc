@@ -46,6 +46,15 @@ def test_vectorize_image_url(fmt: str, ext: str) -> None:
     assert "<svg" in resp.json()["svg"]
 
 
+def test_vectorize_custom_size() -> None:
+    client = TestClient(app)
+    with patch("urllib.request.urlopen", return_value=_Resp("PNG")):
+        resp = client.post("/vectorize?image_url=http://example.com/img.png&size=100")
+    assert resp.status_code == 200
+    body = resp.json()["svg"]
+    assert 'width="100"' in body and 'height="100"' in body
+
+
 @pytest.mark.parametrize(
     "fmt,ext",
     [

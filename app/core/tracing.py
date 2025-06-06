@@ -33,8 +33,14 @@ def raster_to_svg(
     turnpolicy: str = "minority",
     alphamax: float = 1.0,
     turdsize: int = 2,
+    size: int = 250,
 ) -> str:
-    """Convert raster image bytes to an SVG string."""
+    """Convert raster image bytes to a normalized SVG string.
+
+    The resulting SVG is always a square with the given ``size``. The original
+    tracing coordinates are scaled and centered to fit inside this square while
+    preserving aspect ratio.
+    """
     try:
         image = Image.open(io.BytesIO(data))
     except Exception as exc:  # pragma: no cover - invalid image
@@ -67,11 +73,19 @@ def raster_to_svg(
     d = " ".join(path_cmds)
     svg_el = ET.Element(
         "svg",
+        version="1.0",
         xmlns="http://www.w3.org/2000/svg",
-        width=str(width),
-        height=str(height),
+        width=str(size),
+        height=str(size),
+        viewBox=f"0 0 {size} {size}",
+        preserveAspectRatio="xMidYMid meet",
     )
-    ET.SubElement(svg_el, "path", d=d, fill="black", stroke="none")
+    outer = ET.SubElement(svg_el, "g", fill="#000000", stroke="none")
+    scale = min(size / width, size / height)
+    tx = (size - width * scale) / 2
+    ty = (size - height * scale) / 2
+    inner = ET.SubElement(outer, "g", transform=f"translate({tx} {ty}) scale({scale})")
+    ET.SubElement(inner, "path", d=d)
     return ET.tostring(svg_el, encoding="unicode")
 
 
