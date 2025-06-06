@@ -44,6 +44,14 @@ must include the token using one of the following methods:
 1. `Authorization: Bearer <token>` header
 2. `token=<token>` query parameter
 
+## Web interface
+
+Once the service is running you can visit
+`http://localhost:8080/` in your browser for a simple GUI. The page lets you
+upload an image or provide an image URL and tweak any query parameters before
+submitting the request. The server response is shown next to the form as both
+the raw SVG text and a rendered preview.
+
 ## API reference
 
 ### `POST /vectorize`

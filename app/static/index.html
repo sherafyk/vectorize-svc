@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vectorize Service</title>
+<style>
+body {font-family: Arial, sans-serif; margin: 20px; display:flex;}
+form {width: 45%;}
+#output {margin-left: 20px; width: 55%;}
+textarea {width: 100%; height: 300px;}
+#svg-display {border:1px solid #ccc; height:300px;}
+</style>
+</head>
+<body>
+<form id="vectorize-form">
+<h1>Vectorize Image</h1>
+<label>API Token <input type="text" id="token" name="token" placeholder="secret"></label><br>
+<label>Upload Image <input type="file" id="image" name="image"></label><br>
+<label>Image URL <input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png"></label><br>
+<label>Threshold <input type="number" id="threshold" value="128" min="0" max="255"></label><br>
+<label>Turn Policy
+<select id="turnpolicy">
+<option value="black">black</option>
+<option value="white">white</option>
+<option value="left">left</option>
+<option value="right">right</option>
+<option value="minority" selected>minority</option>
+<option value="majority">majority</option>
+<option value="random">random</option>
+</select>
+</label><br>
+<label>Alpha Max <input type="number" id="alphamax" value="1.0" step="0.1"></label><br>
+<label>Turd Size <input type="number" id="turdsize" value="2"></label><br>
+<label>Size <input type="number" id="size" value="250"></label><br>
+<label>Fill Color <input type="text" id="fill" placeholder="#ff0000"></label><br>
+<label>Download <input type="checkbox" id="download"></label><br>
+<button type="submit">Submit</button>
+</form>
+<div id="output">
+<textarea id="svg-text" readonly></textarea>
+<div id="svg-display"></div>
+</div>
+<script>
+document.getElementById('vectorize-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    params.append('threshold', document.getElementById('threshold').value);
+    params.append('turnpolicy', document.getElementById('turnpolicy').value);
+    params.append('alphamax', document.getElementById('alphamax').value);
+    params.append('turdsize', document.getElementById('turdsize').value);
+    params.append('size', document.getElementById('size').value);
+    if (document.getElementById('fill').value)
+        params.append('fill', document.getElementById('fill').value);
+    if (document.getElementById('download').checked)
+        params.append('download', 'true');
+    const token = document.getElementById('token').value;
+    if (token) params.append('token', token);
+    const imageUrl = document.getElementById('image_url').value;
+    if (imageUrl) params.append('image_url', imageUrl);
+
+    const url = '/vectorize?' + params.toString();
+
+    const files = document.getElementById('image').files;
+    let options = { method: 'POST', headers: {} };
+    if (files.length) {
+        const formData = new FormData();
+        formData.append('image', files[0]);
+        options.body = formData;
+    }
+    if (token) options.headers['Authorization'] = 'Bearer ' + token;
+    const response = await fetch(url, options);
+    if (!response.ok) {
+        document.getElementById('svg-text').value = 'Error: ' + response.status;
+        document.getElementById('svg-display').textContent = '';
+        return;
+    }
+    let svgText = '';
+    if (document.getElementById('download').checked) {
+        svgText = await response.text();
+    } else {
+        const data = await response.json();
+        svgText = data.svg;
+    }
+    document.getElementById('svg-text').value = svgText;
+    document.getElementById('svg-display').innerHTML = svgText;
+});
+</script>
+</body>
+</html>

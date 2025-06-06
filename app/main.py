@@ -1,15 +1,24 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 
 from fastapi import FastAPI, File, UploadFile, Query, HTTPException, Request
-from fastapi.responses import JSONResponse, Response
+from fastapi.responses import JSONResponse, Response, FileResponse
+from fastapi.staticfiles import StaticFiles
 import asyncio
 import urllib.request
 
 from .core.tracing import apply_fill, raster_to_svg
 
 app = FastAPI(title="vectorize-svc")
+BASE_DIR = Path(__file__).resolve().parent
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+
+@app.get("/", include_in_schema=False)
+def index() -> FileResponse:
+    """Serve the front-end HTML page."""
+    return FileResponse(BASE_DIR / "static" / "index.html")
 
 # cache API token so we don't hit the environment on every request
 API_TOKEN = os.getenv("API_TOKEN")
