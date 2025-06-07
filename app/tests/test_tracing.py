@@ -59,18 +59,18 @@ def test_numeric_rounding() -> None:
     ns = {"svg": "http://www.w3.org/2000/svg"}
     path_d = tree.find(".//svg:path", ns).attrib.get("d", "")
     numbers = re.findall(r"-?\d+(?:\.\d+)?", path_d)
-    transform = tree.find('.//svg:g[@transform]', ns).attrib.get('transform', '')
+    transform = tree.find(".//svg:g[@transform]", ns).attrib.get("transform", "")
     numbers += re.findall(r"-?\d+(?:\.\d+)?", transform)
     for num in numbers:
-        if '.' in num:
-            assert len(num.split('.')[1]) <= 1
+        if "." in num:
+            assert len(num.split(".")[1]) <= 1
 
 
 def test_apply_stroke() -> None:
     svg = raster_to_svg(_sample_image())
     styled = apply_fill(svg, fill="#00ff00", stroke="#000000", stroke_width=2.5)
-    assert "stroke=\"#000000\"" in styled
-    assert "stroke-width=\"2.5\"" in styled
+    assert 'stroke="#000000"' in styled
+    assert 'stroke-width="2.5"' in styled
 
 
 def test_extra_options() -> None:

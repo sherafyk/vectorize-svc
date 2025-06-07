@@ -12,11 +12,11 @@ from __future__ import annotations
 import io
 from xml.etree import ElementTree as ET
 
-ET.register_namespace("", "http://www.w3.org/2000/svg")
-
 import numpy as np
 from PIL import Image, ImageFilter
 import potrace
+
+ET.register_namespace("", "http://www.w3.org/2000/svg")
 
 
 def _fmt(num: float) -> str:
@@ -25,6 +25,7 @@ def _fmt(num: float) -> str:
     if abs(num - rounded) < 1e-6:
         return str(int(rounded))
     return f"{round(num, 1):.1f}".rstrip("0").rstrip(".")
+
 
 TURNPOLICIES: dict[str, int] = {
     "black": potrace.TURNPOLICY_BLACK,
@@ -101,16 +102,12 @@ def raster_to_svg(
             if seg.is_corner:
                 cx, cy = seg.c
                 ex, ey = seg.end_point
-                cmd += (
-                    f" L {_fmt(cx)} {_fmt(cy)} L {_fmt(ex)} {_fmt(ey)}"
-                )
+                cmd += f" L {_fmt(cx)} {_fmt(cy)} L {_fmt(ex)} {_fmt(ey)}"
             else:
                 c1x, c1y = seg.c1
                 c2x, c2y = seg.c2
                 ex, ey = seg.end_point
-                cmd += (
-                    f" C {_fmt(c1x)} {_fmt(c1y)} {_fmt(c2x)} {_fmt(c2y)} {_fmt(ex)} {_fmt(ey)}"
-                )
+                cmd += f" C {_fmt(c1x)} {_fmt(c1y)} {_fmt(c2x)} {_fmt(c2y)} {_fmt(ex)} {_fmt(ey)}"
         cmd += " Z"
         path_cmds.append(cmd)
     d = " ".join(path_cmds)
