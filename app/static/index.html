@@ -272,6 +272,114 @@
     </div>
   </div>
 
-  <!-- Everything below (Info & Footer) remains unchanged -->
+<section id="info">Add commentMore actions
+<h2>Parameter Descriptions</h2>
+<h4 id="token-info">API Token</h4>
+<p>Authentication token for the request. Use this field if sending an Authorization header is inconvenient.</p>
+<h4 id="image-info">Upload Image</h4>
+<p>Select an image file to upload for vectorization. Leave blank when using Image URL.</p>
+<h4 id="image_url-info">Image URL</h4>
+<p>URL of the image to vectorize when you are not uploading a file. The service downloads this remote image before processing.</p>
+<h4 id="threshold-info">Threshold</h4>
+<p>Brightness cutoff between 0 and 255 used to convert the image to black and white. Higher values treat more pixels as white before tracing.</p>
+<h4 id="turnpolicy-info">Turn Policy</h4>
+<p>Strategy Potrace uses to decide the direction of ambiguous turns. Different policies produce smoother, sharper, or more randomized paths.</p>
+<h4 id="alphamax-info">Alpha Max</h4>
+<p>Parameter that balances curve smoothness against detail. Increasing this makes curves smoother at the expense of small features.</p>
+<h4 id="turdsize-info">Turd Size</h4>
+<p>Minimum size of speckles to keep in the output. Larger values remove more noise but may discard tiny details.</p>
+<h4 id="size-info">Size</h4>
+<p>Width and height of the square SVG output. Bigger values yield a larger vector graphic.</p>
+<h4 id="opticurve-info">Opticurve</h4>
+<p>Whether to apply Potrace's optimal curve fitting. Disable for raw, jagged paths.</p>
+<h4 id="opttolerance-info">Simplification Tolerance</h4>
+<p>How closely the curves match the bitmap. Lower values preserve detail, higher values simplify.</p>
+<h4 id="background-info">Background</h4>
+<p>Background color to apply before tracing. Helpful for images with transparency.</p>
+<h4 id="stroke-info">Stroke Color</h4>
+<p>Optional hex color for the stroke outline.</p>
+<h4 id="stroke_width-info">Stroke Width</h4>
+<p>Width of the stroke when a stroke color is used.</p>
+<h4 id="invert-info">Invert</h4>
+<p>Invert the image colors before vectorizing.</p>
+<h4 id="passes-info">Passes</h4>
+<p>Run multiple tracing passes to refine results.</p>
+<h4 id="autocrop-info">Auto Crop</h4>
+<p>Crop transparent edges before tracing.</p>
+<h4 id="fill-info">Fill Color</h4>
+<p>Optional hex color to fill the traced shapes. Leave unset for a transparent path.</p>
+<h4 id="download-info">Download</h4>
+<p>If true, the endpoint responds with a downloadable SVG file. Otherwise it returns a JSON body containing the SVG string.</p>
+</section>
+<footer id="footer">
+  <ul class="icons">
+    <li><a href="https://github.com/sherafyk/vectorize-svc">GitHub</a></li>
+  </ul>
+</footer>
+<script>
+document.getElementById('vectorize-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    params.append('threshold', document.getElementById('threshold').value);
+    params.append('turnpolicy', document.getElementById('turnpolicy').value);
+    params.append('alphamax', document.getElementById('alphamax').value);
+    params.append('turdsize', document.getElementById('turdsize').value);
+    params.append('size', document.getElementById('size').value);
+    if (!document.getElementById('opticurve').checked)
+        params.append('opticurve', 'false');
+    params.append('opttolerance', document.getElementById('opttolerance').value);
+    const bgField = document.getElementById('background');
+    if (bgField.value && bgField.value !== bgField.dataset.default)
+        params.append('background', bgField.value);
+    const strokeField = document.getElementById('stroke');
+    if (strokeField.value && strokeField.value !== strokeField.dataset.default)
+        params.append('stroke', strokeField.value);
+    params.append('stroke_width', document.getElementById('stroke_width').value);
+    if (document.getElementById('invert').checked)
+        params.append('invert', 'true');
+    params.append('passes', document.getElementById('passes').value);
+    if (document.getElementById('autocrop').checked)
+        params.append('autocrop', 'true');
+    const fillField = document.getElementById('fill');
+    if (fillField.value && fillField.value !== fillField.dataset.default)
+        params.append('fill', fillField.value);
+    if (document.getElementById('download').checked)
+        params.append('download', 'true');
+    const token = document.getElementById('token').value;
+    if (token) params.append('token', token);
+    const imageUrl = document.getElementById('image_url').value;
+    if (imageUrl) params.append('image_url', imageUrl);
+
+    const url = '/vectorize?' + params.toString();
+
+    const files = document.getElementById('image').files;
+    let options = { method: 'POST', headers: {} };
+    if (files.length) {
+        const formData = new FormData();
+        formData.append('image', files[0]);
+        options.body = formData;
+    }
+    if (token) options.headers['Authorization'] = 'Bearer ' + token;
+    const response = await fetch(url, options);
+    if (!response.ok) {
+        document.getElementById('svg-text').value = 'Error: ' + response.status;
+        document.getElementById('svg-display').textContent = '';
+        return;
+    }
+    let svgText = '';
+    if (document.getElementById('download').checked) {
+        svgText = await response.text();
+    } else {
+        const data = await response.json();
+        svgText = data.svg;
+    }Add commentMore actions
+    document.getElementById('svg-text').value = svgText;
+    document.getElementById('svg-display').innerHTML = svgText;
+});
+document.getElementById('copy-btn').addEventListener('click', () => {
+    navigator.clipboard.writeText(document.getElementById('svg-text').value);
+});
+</script>
+
 </body>
 </html>
