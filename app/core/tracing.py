@@ -12,8 +12,10 @@ from __future__ import annotations
 import io
 from xml.etree import ElementTree as ET
 
+ET.register_namespace("", "http://www.w3.org/2000/svg")
+
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 import potrace
 
 
@@ -42,6 +44,12 @@ def raster_to_svg(
     alphamax: float = 1.0,
     turdsize: int = 2,
     size: int = 250,
+    opticurve: bool = True,
+    opttolerance: float = 0.2,
+    background: str | None = None,
+    invert: bool = False,
+    passes: int = 1,
+    autocrop: bool = False,
 ) -> str:
     """Convert raster image bytes to a normalized SVG string.
 
@@ -53,14 +61,37 @@ def raster_to_svg(
         image = Image.open(io.BytesIO(data))
     except Exception as exc:  # pragma: no cover - invalid image
         raise ValueError("Invalid image") from exc
+
+    if background:
+        bg = Image.new("RGBA", image.size, background)
+        img_rgba = image.convert("RGBA")
+        mask = img_rgba.split()[3] if "A" in img_rgba.getbands() else None
+        bg.paste(img_rgba, mask=mask)
+        image = bg
+
+    if autocrop:
+        if "A" in image.getbands():
+            bbox = image.getchannel("A").getbbox()
+        else:
+            bbox = image.getbbox()
+        if bbox:
+            image = image.crop(bbox)
+
     gray = image.convert("L")
+    for _ in range(max(0, passes - 1)):
+        gray = gray.filter(ImageFilter.SMOOTH)
+
     width, height = gray.size
     arr = np.array(gray)
+    if invert:
+        arr = 255 - arr
     bitmap = potrace.Bitmap(arr > threshold)
     path = bitmap.trace(
         turdsize=turdsize,
         turnpolicy=TURNPOLICIES.get(turnpolicy, potrace.TURNPOLICY_MINORITY),
         alphamax=alphamax,
+        opticurve=1 if opticurve else 0,
+        opttolerance=opttolerance,
     )
     path_cmds = []
     for curve in path:
@@ -105,11 +136,22 @@ def raster_to_svg(
     return ET.tostring(svg_el, encoding="unicode")
 
 
-def apply_fill(svg: str, fill: str | None = None) -> str:
-    """Apply a fill color to all paths in the SVG."""
+def apply_fill(
+    svg: str,
+    fill: str | None = None,
+    stroke: str | None = None,
+    stroke_width: float | None = None,
+) -> str:
+    """Apply fill and stroke styles to all paths in the SVG."""
     tree = ET.fromstring(svg)
     ns = {"svg": "http://www.w3.org/2000/svg"}
     for path in tree.findall(".//svg:path", ns):
         if fill:
             path.set("fill", fill)
+        if stroke:
+            path.set("stroke", stroke)
+            if stroke_width is not None:
+                path.set("stroke-width", _fmt(stroke_width))
+        elif stroke_width is not None:
+            path.set("stroke-width", _fmt(stroke_width))
     return ET.tostring(tree, encoding="unicode")

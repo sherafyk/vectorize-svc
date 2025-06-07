@@ -42,6 +42,14 @@ async def vectorize(
     alphamax: float = Query(1.0),
     turdsize: int = Query(2),
     size: int = Query(250, gt=0),
+    opticurve: bool = Query(True),
+    opttolerance: float = Query(0.2),
+    background: str | None = Query(None),
+    stroke: str | None = Query(None),
+    stroke_width: float = Query(1.0),
+    invert: bool = Query(False),
+    passes: int = Query(1, ge=1),
+    autocrop: bool = Query(False),
     fill: str | None = Query(None),
     download: bool = Query(False),
 ) -> Response | JSONResponse:
@@ -67,11 +75,24 @@ async def vectorize(
     if len(content) > 10 * 1024 * 1024:
         raise HTTPException(status_code=400, detail="File too large")
     try:
-        svg = raster_to_svg(content, threshold, turnpolicy, alphamax, turdsize, size)
+        svg = raster_to_svg(
+            content,
+            threshold,
+            turnpolicy,
+            alphamax,
+            turdsize,
+            size,
+            opticurve,
+            opttolerance,
+            background,
+            invert,
+            passes,
+            autocrop,
+        )
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    if fill:
-        svg = apply_fill(svg, fill)
+    if fill or stroke or stroke_width:
+        svg = apply_fill(svg, fill, stroke, stroke_width)
     if download:
         return Response(
             content=svg,
@@ -90,6 +111,14 @@ async def vectorize_get(
     alphamax: float = Query(1.0),
     turdsize: int = Query(2),
     size: int = Query(250, gt=0),
+    opticurve: bool = Query(True),
+    opttolerance: float = Query(0.2),
+    background: str | None = Query(None),
+    stroke: str | None = Query(None),
+    stroke_width: float = Query(1.0),
+    invert: bool = Query(False),
+    passes: int = Query(1, ge=1),
+    autocrop: bool = Query(False),
     fill: str | None = Query(None),
     download: bool = Query(False),
 ) -> Response | JSONResponse:
@@ -103,6 +132,14 @@ async def vectorize_get(
         alphamax=alphamax,
         turdsize=turdsize,
         size=size,
+        opticurve=opticurve,
+        opttolerance=opttolerance,
+        background=background,
+        stroke=stroke,
+        stroke_width=stroke_width,
+        invert=invert,
+        passes=passes,
+        autocrop=autocrop,
         fill=fill,
         download=download,
     )

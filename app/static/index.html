@@ -32,6 +32,14 @@ textarea {width: 100%; height: 300px;}
 <label>Alpha Max <input type="number" id="alphamax" value="1.0" step="0.1"></label><br>
 <label>Turd Size <input type="number" id="turdsize" value="2"></label><br>
 <label>Size <input type="number" id="size" value="250"></label><br>
+<label>Opticurve <input type="checkbox" id="opticurve" checked></label><br>
+<label>Simplification Tolerance <input type="number" id="opttolerance" value="0.2" step="0.1"></label><br>
+<label>Background <input type="text" id="background" placeholder="#ffffff"></label><br>
+<label>Stroke Color <input type="text" id="stroke" placeholder="#000000"></label><br>
+<label>Stroke Width <input type="number" id="stroke_width" value="1.0" step="0.1"></label><br>
+<label>Invert <input type="checkbox" id="invert"></label><br>
+<label>Passes <input type="number" id="passes" value="1" min="1"></label><br>
+<label>Auto Crop <input type="checkbox" id="autocrop"></label><br>
 <label>Fill Color <input type="text" id="fill" placeholder="#ff0000"></label><br>
 <label>Download <input type="checkbox" id="download"></label><br>
 <button type="submit">Submit</button>
@@ -49,6 +57,19 @@ document.getElementById('vectorize-form').addEventListener('submit', async (e) =
     params.append('alphamax', document.getElementById('alphamax').value);
     params.append('turdsize', document.getElementById('turdsize').value);
     params.append('size', document.getElementById('size').value);
+    if (!document.getElementById('opticurve').checked)
+        params.append('opticurve', 'false');
+    params.append('opttolerance', document.getElementById('opttolerance').value);
+    if (document.getElementById('background').value)
+        params.append('background', document.getElementById('background').value);
+    if (document.getElementById('stroke').value)
+        params.append('stroke', document.getElementById('stroke').value);
+    params.append('stroke_width', document.getElementById('stroke_width').value);
+    if (document.getElementById('invert').checked)
+        params.append('invert', 'true');
+    params.append('passes', document.getElementById('passes').value);
+    if (document.getElementById('autocrop').checked)
+        params.append('autocrop', 'true');
     if (document.getElementById('fill').value)
         params.append('fill', document.getElementById('fill').value);
     if (document.getElementById('download').checked)
