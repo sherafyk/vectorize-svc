@@ -4,47 +4,47 @@
     <title>Vectorize Service</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" />
     <link rel="stylesheet" href="/static/assets/css/main.css" />
   </head>
   
-  <body class="is-preload">
+  <body>
     <header id="header">
       <h1>Vectorize Image</h1>
       <p>Convert raster graphics to SVG using potrace.</p>
     </header>
     <div id="main">
       <form id="vectorize-form">
-<label for="token"><a href="#token-info">API Token</a> <input type="text" id="token" name="token" placeholder="secret"></label><br>
-<label for="image"><a href="#image-info">Upload Image</a> <input type="file" id="image" name="image"></label><br>
-<label for="image_url"><a href="#image_url-info">Image URL</a> <input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png"></label><br>
-<label for="threshold"><a href="#threshold-info">Threshold</a> <input type="number" id="threshold" value="128" min="0" max="255"></label><br>
-<label for="turnpolicy"><a href="#turnpolicy-info">Turn Policy</a>
-<select id="turnpolicy">
-<option value="black">black</option>
-<option value="white">white</option>
-<option value="left">left</option>
-<option value="right">right</option>
-<option value="minority" selected>minority</option>
-<option value="majority">majority</option>
-<option value="random">random</option>
-</select>
-</label><br>
-<label for="alphamax"><a href="#alphamax-info">Alpha Max</a> <input type="number" id="alphamax" value="1.0" step="0.1"></label><br>
-<label for="turdsize"><a href="#turdsize-info">Turd Size</a> <input type="number" id="turdsize" value="2"></label><br>
-<label for="size"><a href="#size-info">Size</a> <input type="number" id="size" value="250"></label><br>
-<label for="opticurve"><a href="#opticurve-info">Opticurve</a> <input type="checkbox" id="opticurve" checked></label><br>
-<label for="opttolerance"><a href="#opttolerance-info">Simplification Tolerance</a> <input type="number" id="opttolerance" value="0.2" step="0.1"></label><br>
-<label for="background"><a href="#background-info">Background</a> <input type="text" id="background" placeholder="#ffffff"></label><br>
-<label for="stroke"><a href="#stroke-info">Stroke Color</a> <input type="text" id="stroke" placeholder="#000000"></label><br>
-<label for="stroke_width"><a href="#stroke_width-info">Stroke Width</a> <input type="number" id="stroke_width" value="1.0" step="0.1"></label><br>
-<label for="invert"><a href="#invert-info">Invert</a> <input type="checkbox" id="invert"></label><br>
-<label for="passes"><a href="#passes-info">Passes</a> <input type="number" id="passes" value="1" min="1"></label><br>
-<label for="autocrop"><a href="#autocrop-info">Auto Crop</a> <input type="checkbox" id="autocrop"></label><br>
-<label for="fill"><a href="#fill-info">Fill Color</a> <input type="text" id="fill" placeholder="#ff0000"></label><br>
-<label for="download"><a href="#download-info">Download</a> <input type="checkbox" id="download"></label><br>
-<button type="submit">Submit</button>
-</form>
-<div id="output">
+        <div class="field"><label for="token"><a href="#token-info">API Token</a><input type="text" id="token" name="token" placeholder="secret" /></label></div>
+        <div class="field"><label for="image"><a href="#image-info">Upload Image</a><input type="file" id="image" name="image" /></label></div>
+        <div class="field"><label for="image_url"><a href="#image_url-info">Image URL</a><input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png" /></label></div>
+        <div class="field"><label for="threshold"><a href="#threshold-info">Threshold</a><input type="number" id="threshold" value="128" min="0" max="255" /></label></div>
+        <div class="field"><label for="turnpolicy"><a href="#turnpolicy-info">Turn Policy</a>
+          <select id="turnpolicy">
+            <option value="black">black</option>
+            <option value="white">white</option>
+            <option value="left">left</option>
+            <option value="right">right</option>
+            <option value="minority" selected>minority</option>
+            <option value="majority">majority</option>
+            <option value="random">random</option>
+          </select></label></div>
+        <div class="field"><label for="alphamax"><a href="#alphamax-info">Alpha Max</a><input type="number" id="alphamax" value="1.0" step="0.1" /></label></div>
+        <div class="field"><label for="turdsize"><a href="#turdsize-info">Turd Size</a><input type="number" id="turdsize" value="2" /></label></div>
+        <div class="field"><label for="size"><a href="#size-info">Size</a><input type="number" id="size" value="250" /></label></div>
+        <div class="field"><label for="opticurve"><a href="#opticurve-info">Opticurve</a><input type="checkbox" id="opticurve" checked /></label></div>
+        <div class="field"><label for="opttolerance"><a href="#opttolerance-info">Simplification Tolerance</a><input type="number" id="opttolerance" value="0.2" step="0.1" /></label></div>
+        <div class="field"><label for="background"><a href="#background-info">Background</a><input type="text" id="background" placeholder="#ffffff" /></label></div>
+        <div class="field"><label for="stroke"><a href="#stroke-info">Stroke Color</a><input type="text" id="stroke" placeholder="#000000" /></label></div>
+        <div class="field"><label for="stroke_width"><a href="#stroke_width-info">Stroke Width</a><input type="number" id="stroke_width" value="1.0" step="0.1" /></label></div>
+        <div class="field"><label for="invert"><a href="#invert-info">Invert</a><input type="checkbox" id="invert" /></label></div>
+        <div class="field"><label for="passes"><a href="#passes-info">Passes</a><input type="number" id="passes" value="1" min="1" /></label></div>
+        <div class="field"><label for="autocrop"><a href="#autocrop-info">Auto Crop</a><input type="checkbox" id="autocrop" /></label></div>
+        <div class="field"><label for="fill"><a href="#fill-info">Fill Color</a><input type="text" id="fill" placeholder="#ff0000" /></label></div>
+        <div class="field"><label for="download"><a href="#download-info">Download</a><input type="checkbox" id="download" /></label></div>
+        <button type="submit">Submit</button>
+      </form>
+      <div id="output">
 <textarea id="svg-text" readonly></textarea>
 <div id="svg-display"></div>
 </div>
@@ -90,12 +90,9 @@
 </section>
 <footer id="footer">
   <ul class="icons">
-    <li>
-      <a href="https://github.com/sherafyk/vectorize-svc" class="icon brands fa-github"><span class="label">GitHub</span></a>
-    </li>
+    <li><a href="https://github.com/sherafyk/vectorize-svc">GitHub</a></li>
   </ul>
 </footer>
-<script src="/static/assets/js/main.js"></script>
 <script>
 document.getElementById('vectorize-form').addEventListener('submit', async (e) => {
     e.preventDefault();
