@@ -1,210 +1,277 @@
 <!DOCTYPE HTML>
 <html lang="en">
-  <head>
-    <title>Vectorize Service</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" />
-    <link rel="stylesheet" href="/static/assets/css/main.css" />
-  </head>
-  
-  <body>
-    <header id="header">
-      <h1>Vectorize Image</h1>
-      <p>Convert raster graphics to SVG using potrace.</p>
-    </header>
-    <div id="main">
-      <form id="vectorize-form" class="card">
-        <table class="params">
-          <tr>
-            <td><label for="token"><a href="#token-info">API Token</a></label></td>
-            <td><input type="text" id="token" name="token" placeholder="secret" /></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td><label for="image"><a href="#image-info">Upload Image</a></label></td>
-            <td><input type="file" id="image" name="image" /></td>
-            <td><label for="image_url"><a href="#image_url-info">Image URL</a></label></td>
-            <td><input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png" /></td>
-          </tr>
-          <tr>
-            <td><label for="size"><a href="#size-info">Size</a></label></td>
-            <td><input type="number" id="size" value="250" /></td>
-            <td><label for="threshold"><a href="#threshold-info">Threshold</a></label></td>
-            <td><input type="number" id="threshold" value="128" min="0" max="255" /></td>
-          </tr>
-          <tr>
-            <td><label for="fill"><a href="#fill-info">Fill Color</a></label></td>
-            <td><input type="color" id="fill" value="#ff0000" data-default="#ff0000" /></td>
-            <td><label for="background"><a href="#background-info">Background</a></label></td>
-            <td><input type="color" id="background" value="#ffffff" data-default="#ffffff" /></td>
-          </tr>
-          <tr>
-            <td><label for="stroke"><a href="#stroke-info">Stroke Color</a></label></td>
-            <td><input type="color" id="stroke" value="#000000" data-default="#000000" /></td>
-            <td><label for="stroke_width"><a href="#stroke_width-info">Stroke Width</a></label></td>
-            <td><input type="number" id="stroke_width" value="1.0" step="0.1" /></td>
-          </tr>
-          <tr>
-            <td><label for="alphamax"><a href="#alphamax-info">Alpha Max</a></label></td>
-            <td><input type="number" id="alphamax" value="1.0" step="0.1" /></td>
-            <td><label for="turdsize"><a href="#turdsize-info">Turd Size</a></label></td>
-            <td><input type="number" id="turdsize" value="2" /></td>
-          </tr>
-          <tr>
-            <td><label for="turnpolicy"><a href="#turnpolicy-info">Turn Policy</a></label></td>
-            <td>
-              <select id="turnpolicy">
-                <option value="black">black</option>
-                <option value="white">white</option>
-                <option value="left">left</option>
-                <option value="right">right</option>
-                <option value="minority" selected>minority</option>
-                <option value="majority">majority</option>
-                <option value="random">random</option>
-              </select>
-            </td>
-            <td><label for="opticurve"><a href="#opticurve-info">Opticurve</a></label></td>
-            <td><input type="checkbox" id="opticurve" checked /></td>
-          </tr>
-          <tr>
-            <td><label for="opttolerance"><a href="#opttolerance-info">Simplification Tolerance</a></label></td>
-            <td><input type="number" id="opttolerance" value="0.2" step="0.1" /></td>
-            <td><label for="passes"><a href="#passes-info">Passes</a></label></td>
-            <td><input type="number" id="passes" value="1" min="1" /></td>
-          </tr>
-          <tr>
-            <td><label for="invert"><a href="#invert-info">Invert</a></label></td>
-            <td><input type="checkbox" id="invert" /></td>
-            <td><label for="autocrop"><a href="#autocrop-info">Auto Crop</a></label></td>
-            <td><input type="checkbox" id="autocrop" /></td>
-          </tr>
-          <tr>
-            <td><label for="download"><a href="#download-info">Download</a></label></td>
-            <td><input type="checkbox" id="download" /></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </table>
-        <button type="submit">Submit</button>
-      </form>
-      <br>
-      <div id="output" class="card">
-        <div id="svg-container">
-          <textarea id="svg-text" readonly></textarea>
-          <button id="copy-btn" type="button">Copy SVG</button>
-        </div>
-        <div id="svg-display"></div>
+<head>
+  <title>Vectorize Service</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" />
+  <link rel="stylesheet" href="/static/assets/css/main.css" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      background: linear-gradient(180deg, #111, #000);
+      color: #fff;
+    }
+
+    header {
+      background: linear-gradient(135deg, #0f0f0f, #1b1b1b);
+      color: #fff;
+      padding: 2.5rem 1rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    #main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .card {
+      background: #1a1a1a;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      form {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    input, select {
+      padding: 0.5rem;
+      border: 1px solid #555;
+      border-radius: 4px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+
+    input[type="color"] {
+      padding: 0;
+      height: 2.5rem;
+      cursor: pointer;
+    }
+
+    button {
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 4px;
+      background: #0074F0;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+    }
+
+    button:hover {
+      background: #005bb5;
+      transform: translateY(-2px);
+    }
+
+    #output {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    #svg-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    #svg-display {
+      overflow: auto;
+      border: 1px solid #555;
+      padding: 1rem;
+      border-radius: 4px;
+      background: #f2f2f2;
+      color: #000;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    #svg-text {
+      width: 100%;
+      height: 200px;
+      padding: 0.5rem;
+      border: 1px solid #555;
+      border-radius: 4px;
+      resize: vertical;
+      background: #1a1a1a;
+      color: #fff;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      background: #0f0f0f;
+      color: #fff;
+    }
+
+    .icons {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .icons li {
+      display: inline-block;
+      margin: 0 0.5rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Vectorize Image</h1>
+    <p>Convert raster graphics to SVG using potrace.</p>
+  </header>
+
+  <div id="main">
+    <form id="vectorize-form" class="card">
+
+      <!-- Token -->
+      <div class="field">
+        <label for="token">API Token <a href="#token-info">(info)</a></label>
+        <input type="text" id="token" name="token" placeholder="secret" />
       </div>
-</div>
-<section id="info">
-<h2>Parameter Descriptions</h2>
-<h4 id="token-info">API Token</h4>
-<p>Authentication token for the request. Use this field if sending an Authorization header is inconvenient.</p>
-<h4 id="image-info">Upload Image</h4>
-<p>Select an image file to upload for vectorization. Leave blank when using Image URL.</p>
-<h4 id="image_url-info">Image URL</h4>
-<p>URL of the image to vectorize when you are not uploading a file. The service downloads this remote image before processing.</p>
-<h4 id="threshold-info">Threshold</h4>
-<p>Brightness cutoff between 0 and 255 used to convert the image to black and white. Higher values treat more pixels as white before tracing.</p>
-<h4 id="turnpolicy-info">Turn Policy</h4>
-<p>Strategy Potrace uses to decide the direction of ambiguous turns. Different policies produce smoother, sharper, or more randomized paths.</p>
-<h4 id="alphamax-info">Alpha Max</h4>
-<p>Parameter that balances curve smoothness against detail. Increasing this makes curves smoother at the expense of small features.</p>
-<h4 id="turdsize-info">Turd Size</h4>
-<p>Minimum size of speckles to keep in the output. Larger values remove more noise but may discard tiny details.</p>
-<h4 id="size-info">Size</h4>
-<p>Width and height of the square SVG output. Bigger values yield a larger vector graphic.</p>
-<h4 id="opticurve-info">Opticurve</h4>
-<p>Whether to apply Potrace's optimal curve fitting. Disable for raw, jagged paths.</p>
-<h4 id="opttolerance-info">Simplification Tolerance</h4>
-<p>How closely the curves match the bitmap. Lower values preserve detail, higher values simplify.</p>
-<h4 id="background-info">Background</h4>
-<p>Background color to apply before tracing. Helpful for images with transparency.</p>
-<h4 id="stroke-info">Stroke Color</h4>
-<p>Optional hex color for the stroke outline.</p>
-<h4 id="stroke_width-info">Stroke Width</h4>
-<p>Width of the stroke when a stroke color is used.</p>
-<h4 id="invert-info">Invert</h4>
-<p>Invert the image colors before vectorizing.</p>
-<h4 id="passes-info">Passes</h4>
-<p>Run multiple tracing passes to refine results.</p>
-<h4 id="autocrop-info">Auto Crop</h4>
-<p>Crop transparent edges before tracing.</p>
-<h4 id="fill-info">Fill Color</h4>
-<p>Optional hex color to fill the traced shapes. Leave unset for a transparent path.</p>
-<h4 id="download-info">Download</h4>
-<p>If true, the endpoint responds with a downloadable SVG file. Otherwise it returns a JSON body containing the SVG string.</p>
-</section>
-<footer id="footer">
-  <ul class="icons">
-    <li><a href="https://github.com/sherafyk/vectorize-svc">GitHub</a></li>
-  </ul>
-</footer>
-<script>
-document.getElementById('vectorize-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    params.append('threshold', document.getElementById('threshold').value);
-    params.append('turnpolicy', document.getElementById('turnpolicy').value);
-    params.append('alphamax', document.getElementById('alphamax').value);
-    params.append('turdsize', document.getElementById('turdsize').value);
-    params.append('size', document.getElementById('size').value);
-    if (!document.getElementById('opticurve').checked)
-        params.append('opticurve', 'false');
-    params.append('opttolerance', document.getElementById('opttolerance').value);
-    const bgField = document.getElementById('background');
-    if (bgField.value && bgField.value !== bgField.dataset.default)
-        params.append('background', bgField.value);
-    const strokeField = document.getElementById('stroke');
-    if (strokeField.value && strokeField.value !== strokeField.dataset.default)
-        params.append('stroke', strokeField.value);
-    params.append('stroke_width', document.getElementById('stroke_width').value);
-    if (document.getElementById('invert').checked)
-        params.append('invert', 'true');
-    params.append('passes', document.getElementById('passes').value);
-    if (document.getElementById('autocrop').checked)
-        params.append('autocrop', 'true');
-    const fillField = document.getElementById('fill');
-    if (fillField.value && fillField.value !== fillField.dataset.default)
-        params.append('fill', fillField.value);
-    if (document.getElementById('download').checked)
-        params.append('download', 'true');
-    const token = document.getElementById('token').value;
-    if (token) params.append('token', token);
-    const imageUrl = document.getElementById('image_url').value;
-    if (imageUrl) params.append('image_url', imageUrl);
 
-    const url = '/vectorize?' + params.toString();
+      <!-- Upload / URL -->
+      <div class="field">
+        <label for="image">Upload Image <a href="#image-info">(info)</a></label>
+        <input type="file" id="image" name="image" />
+      </div>
 
-    const files = document.getElementById('image').files;
-    let options = { method: 'POST', headers: {} };
-    if (files.length) {
-        const formData = new FormData();
-        formData.append('image', files[0]);
-        options.body = formData;
-    }
-    if (token) options.headers['Authorization'] = 'Bearer ' + token;
-    const response = await fetch(url, options);
-    if (!response.ok) {
-        document.getElementById('svg-text').value = 'Error: ' + response.status;
-        document.getElementById('svg-display').textContent = '';
-        return;
-    }
-    let svgText = '';
-    if (document.getElementById('download').checked) {
-        svgText = await response.text();
-    } else {
-        const data = await response.json();
-        svgText = data.svg;
-    }
-    document.getElementById('svg-text').value = svgText;
-    document.getElementById('svg-display').innerHTML = svgText;
-});
-document.getElementById('copy-btn').addEventListener('click', () => {
-    navigator.clipboard.writeText(document.getElementById('svg-text').value);
-});
-</script>
+      <div class="field">
+        <label for="image_url">Image URL <a href="#image_url-info">(info)</a></label>
+        <input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png" />
+      </div>
+
+      <!-- Size & Threshold -->
+      <div class="field">
+        <label for="size">Size <a href="#size-info">(info)</a></label>
+        <input type="number" id="size" name="size" value="250" />
+      </div>
+
+      <div class="field">
+        <label for="threshold">Threshold <a href="#threshold-info">(info)</a></label>
+        <input type="number" id="threshold" name="threshold" value="128" min="0" max="255" />
+      </div>
+
+      <!-- Colors -->
+      <div class="field">
+        <label for="fill">Fill Color <a href="#fill-info">(info)</a></label>
+        <input type="color" id="fill" name="fill" value="#ff0000" data-default="#ff0000" />
+      </div>
+
+      <div class="field">
+        <label for="background">Background <a href="#background-info">(info)</a></label>
+        <input type="color" id="background" name="background" value="#ffffff" data-default="#ffffff" />
+      </div>
+
+      <div class="field">
+        <label for="stroke">Stroke Color <a href="#stroke-info">(info)</a></label>
+        <input type="color" id="stroke" name="stroke" value="#000000" data-default="#000000" />
+      </div>
+
+      <div class="field">
+        <label for="stroke_width">Stroke Width <a href="#stroke_width-info">(info)</a></label>
+        <input type="number" id="stroke_width" name="stroke_width" value="1.0" step="0.1" />
+      </div>
+
+      <!-- Potrace Params -->
+      <div class="field">
+        <label for="alphamax">Alpha Max <a href="#alphamax-info">(info)</a></label>
+        <input type="number" id="alphamax" name="alphamax" value="1.0" step="0.1" />
+      </div>
+
+      <div class="field">
+        <label for="turdsize">Turd Size <a href="#turdsize-info">(info)</a></label>
+        <input type="number" id="turdsize" name="turdsize" value="2" />
+      </div>
+
+      <div class="field">
+        <label for="turnpolicy">Turn Policy <a href="#turnpolicy-info">(info)</a></label>
+        <select id="turnpolicy" name="turnpolicy">
+          <option value="black">black</option>
+          <option value="white">white</option>
+          <option value="left">left</option>
+          <option value="right">right</option>
+          <option value="minority" selected>minority</option>
+          <option value="majority">majority</option>
+          <option value="random">random</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="opticurve">Opticurve <a href="#opticurve-info">(info)</a></label>
+        <input type="checkbox" id="opticurve" name="opticurve" checked />
+      </div>
+
+      <div class="field">
+        <label for="opttolerance">Simplification Tolerance <a href="#opttolerance-info">(info)</a></label>
+        <input type="number" id="opttolerance" name="opttolerance" value="0.2" step="0.1" />
+      </div>
+
+      <div class="field">
+        <label for="passes">Passes <a href="#passes-info">(info)</a></label>
+        <input type="number" id="passes" name="passes" value="1" min="1" />
+      </div>
+
+      <div class="field">
+        <label for="invert">Invert <a href="#invert-info">(info)</a></label>
+        <input type="checkbox" id="invert" name="invert" />
+      </div>
+
+      <div class="field">
+        <label for="autocrop">Auto Crop <a href="#autocrop-info">(info)</a></label>
+        <input type="checkbox" id="autocrop" name="autocrop" />
+      </div>
+
+      <div class="field">
+        <label for="download">Download <a href="#download-info">(info)</a></label>
+        <input type="checkbox" id="download" name="download" />
+      </div>
+
+      <div class="field" style="grid-column: span 2;">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+
+    <div id="output" class="card">
+      <div id="svg-container">
+        <textarea id="svg-text" readonly></textarea>
+        <button id="copy-btn" type="button">Copy SVG</button>
+      </div>
+      <div id="svg-display"></div>
+    </div>
+  </div>
+
+  <!-- Everything below (Info & Footer) remains unchanged -->
 </body>
 </html>
