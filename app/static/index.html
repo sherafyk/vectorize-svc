@@ -36,13 +36,13 @@
           </tr>
           <tr>
             <td><label for="fill"><a href="#fill-info">Fill Color</a></label></td>
-            <td><input type="text" id="fill" placeholder="#ff0000" /></td>
+            <td><input type="color" id="fill" value="#ff0000" data-default="#ff0000" /></td>
             <td><label for="background"><a href="#background-info">Background</a></label></td>
-            <td><input type="text" id="background" placeholder="#ffffff" /></td>
+            <td><input type="color" id="background" value="#ffffff" data-default="#ffffff" /></td>
           </tr>
           <tr>
             <td><label for="stroke"><a href="#stroke-info">Stroke Color</a></label></td>
-            <td><input type="text" id="stroke" placeholder="#000000" /></td>
+            <td><input type="color" id="stroke" value="#000000" data-default="#000000" /></td>
             <td><label for="stroke_width"><a href="#stroke_width-info">Stroke Width</a></label></td>
             <td><input type="number" id="stroke_width" value="1.0" step="0.1" /></td>
           </tr>
@@ -153,18 +153,21 @@ document.getElementById('vectorize-form').addEventListener('submit', async (e) =
     if (!document.getElementById('opticurve').checked)
         params.append('opticurve', 'false');
     params.append('opttolerance', document.getElementById('opttolerance').value);
-    if (document.getElementById('background').value)
-        params.append('background', document.getElementById('background').value);
-    if (document.getElementById('stroke').value)
-        params.append('stroke', document.getElementById('stroke').value);
+    const bgField = document.getElementById('background');
+    if (bgField.value && bgField.value !== bgField.dataset.default)
+        params.append('background', bgField.value);
+    const strokeField = document.getElementById('stroke');
+    if (strokeField.value && strokeField.value !== strokeField.dataset.default)
+        params.append('stroke', strokeField.value);
     params.append('stroke_width', document.getElementById('stroke_width').value);
     if (document.getElementById('invert').checked)
         params.append('invert', 'true');
     params.append('passes', document.getElementById('passes').value);
     if (document.getElementById('autocrop').checked)
         params.append('autocrop', 'true');
-    if (document.getElementById('fill').value)
-        params.append('fill', document.getElementById('fill').value);
+    const fillField = document.getElementById('fill');
+    if (fillField.value && fillField.value !== fillField.dataset.default)
+        params.append('fill', fillField.value);
     if (document.getElementById('download').checked)
         params.append('download', 'true');
     const token = document.getElementById('token').value;
