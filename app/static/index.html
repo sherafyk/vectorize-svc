@@ -14,7 +14,7 @@
       <p>Convert raster graphics to SVG using potrace.</p>
     </header>
     <div id="main">
-      <form id="vectorize-form">
+      <form id="vectorize-form" class="card">
         <div class="field"><label for="token"><a href="#token-info">API Token</a><input type="text" id="token" name="token" placeholder="secret" /></label></div>
         <div class="field"><label for="image"><a href="#image-info">Upload Image</a><input type="file" id="image" name="image" /></label></div>
         <div class="field"><label for="image_url"><a href="#image_url-info">Image URL</a><input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png" /></label></div>
@@ -44,7 +44,7 @@
         <div class="field"><label for="download"><a href="#download-info">Download</a><input type="checkbox" id="download" /></label></div>
         <button type="submit">Submit</button>
       </form>
-      <div id="output">
+      <div id="output" class="card">
 <textarea id="svg-text" readonly></textarea>
 <div id="svg-display"></div>
 </div>
