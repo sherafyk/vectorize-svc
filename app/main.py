@@ -15,10 +15,12 @@ app = FastAPI(title="vectorize-svc")
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 
+
 @app.get("/", include_in_schema=False)
 def index() -> FileResponse:
     """Serve the front-end HTML page."""
     return FileResponse(BASE_DIR / "static" / "index.html")
+
 
 # cache API token so we don't hit the environment on every request
 API_TOKEN = os.getenv("API_TOKEN")
