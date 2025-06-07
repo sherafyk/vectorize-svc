@@ -61,17 +61,21 @@ Supported input types include PNG, JPEG, WebP, and any other format that Pillow 
 
 **Query parameters**
 
+<div style="font-size: 0.875em">
+
 | name | type | default | options | description |
 | --- | --- | --- | --- | --- |
-| `image_url` | str | `None` | `https://example.com/img.png` | URL of the source image when not uploading a file |
-| `token` | str | – | `secret` | API token if not using the `Authorization` header |
-| `threshold` | int | `128` | `64`, `128`, `200` | Binarization threshold (0–255) |
-| `turnpolicy` | str | `minority` | `black`, `white`, `left`, `right`, `minority`, `majority`, `random` | Potrace turn policy |
-| `alphamax` | float | `1.0` | `0.0`, `1.0`, `2.0` | AlphaMax parameter |
-| `turdsize` | int | `2` | `0`, `2`, `5` | Suppress speckles smaller than this |
-| `size` | int | `250` | `100`, `250`, `500` | Output dimension (square pixels)
-| `fill` | str | `None` | `#ff0000`, `#00ff00` | Optional fill color |
-| `download` | bool | `false` | `true`, `false` | Return SVG as attachment |
+| `image_url` | str | `None` | `https://example.com/img.png` | URL of the image to vectorize when you are not uploading a file. The service downloads this remote image before processing. |
+| `token` | str | – | `secret` | Authentication token for the request. Use this field if sending an `Authorization` header is inconvenient. |
+| `threshold` | int | `128` | `64`, `128`, `200` | Brightness cutoff between 0 and 255 used to convert the image to black and white. Higher values treat more pixels as white before tracing. |
+| `turnpolicy` | str | `minority` | `black`, `white`, `left`, `right`, `minority`, `majority`, `random` | Strategy Potrace uses to decide the direction of ambiguous turns. Different policies produce smoother, sharper, or more randomized paths. |
+| `alphamax` | float | `1.0` | `0.0`, `1.0`, `2.0` | Parameter that balances curve smoothness against detail. Increasing this makes curves smoother at the expense of small features. |
+| `turdsize` | int | `2` | `0`, `2`, `5` | Minimum size of speckles to keep in the output. Larger values remove more noise but may discard tiny details. |
+| `size` | int | `250` | `100`, `250`, `500` | Width and height of the square SVG output. Bigger values yield a larger vector graphic. |
+| `fill` | str | `None` | `#ff0000`, `#00ff00` | Optional hex color to fill the traced shapes. Leave unset for a transparent path. |
+| `download` | bool | `false` | `true`, `false` | If `true`, the endpoint responds with a downloadable SVG file. Otherwise it returns a JSON body containing the SVG string. |
+
+</div>
 
 Responses:
 - `200` JSON `{"svg": "<svg...>"}` or raw SVG if `download=true`
