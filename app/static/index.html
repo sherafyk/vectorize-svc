@@ -29,8 +29,30 @@
             <td><input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png" /></td>
           </tr>
           <tr>
+            <td><label for="size"><a href="#size-info">Size</a></label></td>
+            <td><input type="number" id="size" value="250" /></td>
             <td><label for="threshold"><a href="#threshold-info">Threshold</a></label></td>
             <td><input type="number" id="threshold" value="128" min="0" max="255" /></td>
+          </tr>
+          <tr>
+            <td><label for="fill"><a href="#fill-info">Fill Color</a></label></td>
+            <td><input type="text" id="fill" placeholder="#ff0000" /></td>
+            <td><label for="background"><a href="#background-info">Background</a></label></td>
+            <td><input type="text" id="background" placeholder="#ffffff" /></td>
+          </tr>
+          <tr>
+            <td><label for="stroke"><a href="#stroke-info">Stroke Color</a></label></td>
+            <td><input type="text" id="stroke" placeholder="#000000" /></td>
+            <td><label for="stroke_width"><a href="#stroke_width-info">Stroke Width</a></label></td>
+            <td><input type="number" id="stroke_width" value="1.0" step="0.1" /></td>
+          </tr>
+          <tr>
+            <td><label for="alphamax"><a href="#alphamax-info">Alpha Max</a></label></td>
+            <td><input type="number" id="alphamax" value="1.0" step="0.1" /></td>
+            <td><label for="turdsize"><a href="#turdsize-info">Turd Size</a></label></td>
+            <td><input type="number" id="turdsize" value="2" /></td>
+          </tr>
+          <tr>
             <td><label for="turnpolicy"><a href="#turnpolicy-info">Turn Policy</a></label></td>
             <td>
               <select id="turnpolicy">
@@ -43,42 +65,20 @@
                 <option value="random">random</option>
               </select>
             </td>
-          </tr>
-          <tr>
-            <td><label for="alphamax"><a href="#alphamax-info">Alpha Max</a></label></td>
-            <td><input type="number" id="alphamax" value="1.0" step="0.1" /></td>
-            <td><label for="turdsize"><a href="#turdsize-info">Turd Size</a></label></td>
-            <td><input type="number" id="turdsize" value="2" /></td>
-          </tr>
-          <tr>
-            <td><label for="size"><a href="#size-info">Size</a></label></td>
-            <td><input type="number" id="size" value="250" /></td>
             <td><label for="opticurve"><a href="#opticurve-info">Opticurve</a></label></td>
             <td><input type="checkbox" id="opticurve" checked /></td>
           </tr>
           <tr>
             <td><label for="opttolerance"><a href="#opttolerance-info">Simplification Tolerance</a></label></td>
             <td><input type="number" id="opttolerance" value="0.2" step="0.1" /></td>
-            <td><label for="background"><a href="#background-info">Background</a></label></td>
-            <td><input type="text" id="background" placeholder="#ffffff" /></td>
-          </tr>
-          <tr>
-            <td><label for="stroke"><a href="#stroke-info">Stroke Color</a></label></td>
-            <td><input type="text" id="stroke" placeholder="#000000" /></td>
-            <td><label for="stroke_width"><a href="#stroke_width-info">Stroke Width</a></label></td>
-            <td><input type="number" id="stroke_width" value="1.0" step="0.1" /></td>
-          </tr>
-          <tr>
-            <td><label for="invert"><a href="#invert-info">Invert</a></label></td>
-            <td><input type="checkbox" id="invert" /></td>
             <td><label for="passes"><a href="#passes-info">Passes</a></label></td>
             <td><input type="number" id="passes" value="1" min="1" /></td>
           </tr>
           <tr>
+            <td><label for="invert"><a href="#invert-info">Invert</a></label></td>
+            <td><input type="checkbox" id="invert" /></td>
             <td><label for="autocrop"><a href="#autocrop-info">Auto Crop</a></label></td>
             <td><input type="checkbox" id="autocrop" /></td>
-            <td><label for="fill"><a href="#fill-info">Fill Color</a></label></td>
-            <td><input type="text" id="fill" placeholder="#ff0000" /></td>
           </tr>
           <tr>
             <td><label for="download"><a href="#download-info">Download</a></label></td>
@@ -90,9 +90,11 @@
         <button type="submit">Submit</button>
       </form>
       <div id="output" class="card">
-<textarea id="svg-text" readonly></textarea>
-<button id="copy-btn" type="button">Copy SVG</button>
-<div id="svg-display"></div>
+        <div id="svg-container">
+          <textarea id="svg-text" readonly></textarea>
+          <button id="copy-btn" type="button">Copy SVG</button>
+        </div>
+        <div id="svg-display"></div>
       </div>
 </div>
 <section id="info">
