@@ -64,3 +64,23 @@ def test_numeric_rounding() -> None:
     for num in numbers:
         if '.' in num:
             assert len(num.split('.')[1]) <= 1
+
+
+def test_apply_stroke() -> None:
+    svg = raster_to_svg(_sample_image())
+    styled = apply_fill(svg, fill="#00ff00", stroke="#000000", stroke_width=2.5)
+    assert "stroke=\"#000000\"" in styled
+    assert "stroke-width=\"2.5\"" in styled
+
+
+def test_extra_options() -> None:
+    svg = raster_to_svg(
+        _sample_image(),
+        opticurve=False,
+        opttolerance=0.5,
+        background="#ffffff",
+        invert=True,
+        passes=2,
+        autocrop=True,
+    )
+    assert svg.startswith("<svg")

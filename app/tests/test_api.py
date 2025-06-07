@@ -129,3 +129,13 @@ def test_auth_query_param_get(fmt: str, ext: str) -> None:
                 f"/vectorize?image_url=http://example.com/img.{ext}&token=secret"
             )
         assert resp.status_code == 200
+
+
+def test_additional_params() -> None:
+    client = TestClient(app)
+    with patch("urllib.request.urlopen", return_value=_Resp("PNG")):
+        resp = client.post(
+            "/vectorize?image_url=http://example.com/img.png&opticurve=false&opttolerance=0.5&stroke=%23000000&stroke_width=2&invert=true&passes=2&autocrop=true",
+        )
+    assert resp.status_code == 200
+    assert "stroke=\"#000000\"" in resp.json()["svg"]

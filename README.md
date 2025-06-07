@@ -73,6 +73,14 @@ Supported input types include PNG, JPEG, WebP, and any other format that Pillow 
 | `alphamax` | float | `1.0` | `0.0`, `1.0`, `2.0` | <sub>Parameter that balances curve smoothness against detail. Increasing this makes curves smoother at the expense of small features. |
 | `turdsize` | int | `2` | `0`, `2`, `5` | <sub> Minimum size of speckles to keep in the output. Larger values remove more noise but may discard tiny details. |
 | `size` | int | `250` | `100`, `250`, `500` | <sub> Width and height of the square SVG output. Bigger values yield a larger vector graphic. |
+| `opticurve` | bool | `true` | `true`, `false` | <sub>Whether to apply Potrace's optimal curve fitting. Disable for raw, jagged paths. |
+| `opttolerance` | float | `0.2` | `0.0`, `0.5`, `1.0` | <sub>How closely the curves match the bitmap. Lower values preserve detail, higher values simplify. |
+| `background` | str | `None` | `#ffffff` | <sub>Background color to apply before tracing. Helpful for images with transparency. |
+| `stroke` | str | `None` | `#000000` | <sub>Optional hex color for the stroke outline. |
+| `stroke_width` | float | `1.0` | `0.5`, `1.0`, `2.0` | <sub>Width of the stroke when a stroke color is used. |
+| `invert` | bool | `false` | `true`, `false` | <sub>Invert the image colors before vectorizing. |
+| `passes` | int | `1` | `1`, `2`, `3` | <sub>Run multiple tracing passes to refine results. |
+| `autocrop` | bool | `false` | `true`, `false` | <sub>Crop transparent edges before tracing. |
 | `fill` | str | `None` | `#ff0000`, `#00ff00` | <sub> Optional hex color to fill the traced shapes. Leave unset for a transparent path. |
 | `download` | bool | `false` | `true`, `false` | <sub> If `true`, the endpoint responds with a downloadable SVG file. Otherwise it returns a JSON body containing the SVG string. |
 
