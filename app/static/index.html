@@ -15,39 +15,85 @@
     </header>
     <div id="main">
       <form id="vectorize-form" class="card">
-        <div class="field"><label for="token"><a href="#token-info">API Token</a><input type="text" id="token" name="token" placeholder="secret" /></label></div>
-        <div class="field"><label for="image"><a href="#image-info">Upload Image</a><input type="file" id="image" name="image" /></label></div>
-        <div class="field"><label for="image_url"><a href="#image_url-info">Image URL</a><input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png" /></label></div>
-        <div class="field"><label for="threshold"><a href="#threshold-info">Threshold</a><input type="number" id="threshold" value="128" min="0" max="255" /></label></div>
-        <div class="field"><label for="turnpolicy"><a href="#turnpolicy-info">Turn Policy</a>
-          <select id="turnpolicy">
-            <option value="black">black</option>
-            <option value="white">white</option>
-            <option value="left">left</option>
-            <option value="right">right</option>
-            <option value="minority" selected>minority</option>
-            <option value="majority">majority</option>
-            <option value="random">random</option>
-          </select></label></div>
-        <div class="field"><label for="alphamax"><a href="#alphamax-info">Alpha Max</a><input type="number" id="alphamax" value="1.0" step="0.1" /></label></div>
-        <div class="field"><label for="turdsize"><a href="#turdsize-info">Turd Size</a><input type="number" id="turdsize" value="2" /></label></div>
-        <div class="field"><label for="size"><a href="#size-info">Size</a><input type="number" id="size" value="250" /></label></div>
-        <div class="field"><label for="opticurve"><a href="#opticurve-info">Opticurve</a><input type="checkbox" id="opticurve" checked /></label></div>
-        <div class="field"><label for="opttolerance"><a href="#opttolerance-info">Simplification Tolerance</a><input type="number" id="opttolerance" value="0.2" step="0.1" /></label></div>
-        <div class="field"><label for="background"><a href="#background-info">Background</a><input type="text" id="background" placeholder="#ffffff" /></label></div>
-        <div class="field"><label for="stroke"><a href="#stroke-info">Stroke Color</a><input type="text" id="stroke" placeholder="#000000" /></label></div>
-        <div class="field"><label for="stroke_width"><a href="#stroke_width-info">Stroke Width</a><input type="number" id="stroke_width" value="1.0" step="0.1" /></label></div>
-        <div class="field"><label for="invert"><a href="#invert-info">Invert</a><input type="checkbox" id="invert" /></label></div>
-        <div class="field"><label for="passes"><a href="#passes-info">Passes</a><input type="number" id="passes" value="1" min="1" /></label></div>
-        <div class="field"><label for="autocrop"><a href="#autocrop-info">Auto Crop</a><input type="checkbox" id="autocrop" /></label></div>
-        <div class="field"><label for="fill"><a href="#fill-info">Fill Color</a><input type="text" id="fill" placeholder="#ff0000" /></label></div>
-        <div class="field"><label for="download"><a href="#download-info">Download</a><input type="checkbox" id="download" /></label></div>
+        <table class="params">
+          <tr>
+            <td><label for="token"><a href="#token-info">API Token</a></label></td>
+            <td><input type="text" id="token" name="token" placeholder="secret" /></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><label for="image"><a href="#image-info">Upload Image</a></label></td>
+            <td><input type="file" id="image" name="image" /></td>
+            <td><label for="image_url"><a href="#image_url-info">Image URL</a></label></td>
+            <td><input type="text" id="image_url" name="image_url" placeholder="https://example.com/image.png" /></td>
+          </tr>
+          <tr>
+            <td><label for="threshold"><a href="#threshold-info">Threshold</a></label></td>
+            <td><input type="number" id="threshold" value="128" min="0" max="255" /></td>
+            <td><label for="turnpolicy"><a href="#turnpolicy-info">Turn Policy</a></label></td>
+            <td>
+              <select id="turnpolicy">
+                <option value="black">black</option>
+                <option value="white">white</option>
+                <option value="left">left</option>
+                <option value="right">right</option>
+                <option value="minority" selected>minority</option>
+                <option value="majority">majority</option>
+                <option value="random">random</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td><label for="alphamax"><a href="#alphamax-info">Alpha Max</a></label></td>
+            <td><input type="number" id="alphamax" value="1.0" step="0.1" /></td>
+            <td><label for="turdsize"><a href="#turdsize-info">Turd Size</a></label></td>
+            <td><input type="number" id="turdsize" value="2" /></td>
+          </tr>
+          <tr>
+            <td><label for="size"><a href="#size-info">Size</a></label></td>
+            <td><input type="number" id="size" value="250" /></td>
+            <td><label for="opticurve"><a href="#opticurve-info">Opticurve</a></label></td>
+            <td><input type="checkbox" id="opticurve" checked /></td>
+          </tr>
+          <tr>
+            <td><label for="opttolerance"><a href="#opttolerance-info">Simplification Tolerance</a></label></td>
+            <td><input type="number" id="opttolerance" value="0.2" step="0.1" /></td>
+            <td><label for="background"><a href="#background-info">Background</a></label></td>
+            <td><input type="text" id="background" placeholder="#ffffff" /></td>
+          </tr>
+          <tr>
+            <td><label for="stroke"><a href="#stroke-info">Stroke Color</a></label></td>
+            <td><input type="text" id="stroke" placeholder="#000000" /></td>
+            <td><label for="stroke_width"><a href="#stroke_width-info">Stroke Width</a></label></td>
+            <td><input type="number" id="stroke_width" value="1.0" step="0.1" /></td>
+          </tr>
+          <tr>
+            <td><label for="invert"><a href="#invert-info">Invert</a></label></td>
+            <td><input type="checkbox" id="invert" /></td>
+            <td><label for="passes"><a href="#passes-info">Passes</a></label></td>
+            <td><input type="number" id="passes" value="1" min="1" /></td>
+          </tr>
+          <tr>
+            <td><label for="autocrop"><a href="#autocrop-info">Auto Crop</a></label></td>
+            <td><input type="checkbox" id="autocrop" /></td>
+            <td><label for="fill"><a href="#fill-info">Fill Color</a></label></td>
+            <td><input type="text" id="fill" placeholder="#ff0000" /></td>
+          </tr>
+          <tr>
+            <td><label for="download"><a href="#download-info">Download</a></label></td>
+            <td><input type="checkbox" id="download" /></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
         <button type="submit">Submit</button>
       </form>
       <div id="output" class="card">
 <textarea id="svg-text" readonly></textarea>
+<button id="copy-btn" type="button">Copy SVG</button>
 <div id="svg-display"></div>
-</div>
+      </div>
 </div>
 <section id="info">
 <h2>Parameter Descriptions</h2>
@@ -149,6 +195,9 @@ document.getElementById('vectorize-form').addEventListener('submit', async (e) =
     }
     document.getElementById('svg-text').value = svgText;
     document.getElementById('svg-display').innerHTML = svgText;
+});
+document.getElementById('copy-btn').addEventListener('click', () => {
+    navigator.clipboard.writeText(document.getElementById('svg-text').value);
 });
 </script>
 </body>
