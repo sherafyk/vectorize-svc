@@ -53,12 +53,20 @@ form {
 }
 
 .field input,
-.field select {
+.field select,
+table.params input,
+table.params select {
   padding: 0.5rem;
   border: 1px solid #555;
   border-radius: 4px;
   background: #1a1a1a;
   color: #fff;
+}
+
+input[type="color"] {
+  padding: 0;
+  height: 2.5rem;
+  cursor: pointer;
 }
 
 button {
@@ -165,8 +173,21 @@ table.params {
 table.params td {
   padding: 5px;
   border: 1px solid transparent;
+  flex: 1 1 50%;
+  box-sizing: border-box;
 }
 
 table.params label {
   font-weight: 700;
+}
+
+table.params tr {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  table.params td {
+    flex-basis: 100%;
+  }
 }
