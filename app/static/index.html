@@ -375,7 +375,7 @@ document.getElementById('vectorize-form').addEventListener('submit', async (e) =
     } else {
         const data = await response.json();
         svgText = data.svg;
-    }Add commentMore actions
+    }
     document.getElementById('svg-text').value = svgText;
     document.getElementById('svg-display').innerHTML = svgText;
 });
